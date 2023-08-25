@@ -57,8 +57,8 @@ impl Profiler {
 
         if self.init.fetch_and(false, Acquire) {
             let ix = COUNTER.fetch_add(1, Acquire);
-            unsafe {
-                PROFILERS[ix] = self;
+            if let Some(entry) = unsafe { PROFILERS.get_mut(ix) } {
+                *entry = self;
             }
         }
 
